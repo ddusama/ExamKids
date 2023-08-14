@@ -1,43 +1,56 @@
-import React from 'react';
-import { Image, StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import React, {useContext} from 'react';
+import {Image, StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from "../../context/AuthContext";
 
 const Configuration = () => {
     const user =
         'https://i.postimg.cc/KYbfVx3p/png-transparent-computer-icons-user-encapsulated-postscript-others-miscellaneous-orange-user-profile.png';
-    const cerrarIcon = <Icon name='arrow-left' size={20} color="white" />;
+    const cerrarIcon = <Icon name='arrow-left' size={20} color="white"/>;
 
     const navigation = useNavigation();
+    const {logout, userInfo} = useContext(AuthContext)
+
     const handleOut = () => {
-        // Redireccionar a la pantalla de navegación usando la función de navegación proporcionada por useNavigation
-        navigation.navigate("Login");
+        logout()
     };
 
     return (
         <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
             <View>
-                <Text style={styles.text}>PERFIL</Text>
-                <Image source={{ uri: user }} style={styles.user} />
-                <Text style={styles.textInf}>Cédula:</Text>
-                <Text style={styles.textInf}>Nombres y Apellidos:</Text>
-                <Text style={styles.textInf}>Usuario:</Text>
-                <Text style={styles.textInf}>Correo:</Text>
-                <TouchableOpacity style={styles.button} onPress={handleOut}>
-                    <Text style={styles.textButton}>
-                        {cerrarIcon} Cerrar sesión
-                    </Text>
-                </TouchableOpacity>
+                <View>
+                    <View style={styles.container}>
+                        <Text style={styles.text}>PERFIL</Text>
+                        <Image source={{uri: user}} style={styles.user}/>
+                    </View>
+                    <View style={{flexDirection: "column", alignItems: "center"}}>
+                        <Pressable style={styles.RectangleShapeView}>
+                            <Text style={styles.headtText}>Cédula</Text>
+                            <Text style={styles.SubjectText}>{userInfo.cedula}</Text>
+                        </Pressable>
+                        <Pressable style={styles.RectangleShapeView}>
+                            <Text style={styles.headtText}>Nombres y Apellidos</Text>
+                            <Text style={styles.SubjectText}>{userInfo.name}</Text>
+                        </Pressable>
+                        <Pressable style={styles.RectangleShapeView}>
+                            <Text style={styles.headtText}>Email</Text>
+                            <Text style={styles.SubjectText}>{userInfo.sub}</Text>
+                        </Pressable>
+                        <TouchableOpacity style={styles.button} onPress={handleOut}>
+                            <Text style={styles.textButton}>
+                                Cerrar sesión
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
-        </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 5,
         alignItems: 'center',
         backgroundColor: '#DEE1E6',
         marginTop: 35,
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 50,
         borderWidth: 1,
-        borderColor: '#fd7858',
+        borderColor: '=',
         backgroundColor: '#fd7858',
         padding: 10,
         borderRadius: 7,
@@ -83,7 +96,35 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: 'white', // Cambia el color del fondo según el tema de tu app
-      },
+    },
+    RectangleShapeView: {
+        marginTop: 20,
+        width: "80%",
+        height: 80,
+        backgroundColor: "white",
+        color: "black",
+        borderRadius: 10,
+        borderColor: "black",
+        borderWidth: 1,
+        elevation: 3
+    },
+    headtText: {
+        fontFamily: "Helvetica",
+        color: "grey",
+        fontWeight: "600",
+        float: "left",
+        marginLeft: 20,
+        marginTop: 10
+    },
+    SubjectText: {
+        color: "black",
+        fontWeight: "550",
+        fontSize: 16,
+        fontFamily: "Helvetica",
+        float: "left",
+        marginLeft: 20,
+        marginTop: 10
+    }
 })
 
 export default Configuration;
