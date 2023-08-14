@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import {
     Image, StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {AuthContext} from "../../context/AuthContext";
+import {Formik, validateYupSchema} from "formik";
+import * as yup from "yup"
+import {Input} from "@rneui/themed";
+
+
+const loginSchema = yup.object({
+    email: yup.string()
+        .email('Invalid Email')
+        .required('Email is required'),
+    password: yup.string()
+        .min(8, 'Password is too short')
+        .required('Password is required')
+})
 
 const Login = () => {
     const logo = "https://i.postimg.cc/Zn9ScShf/logo.png";
-    const [user, setUser] = useState('');
-    const [password, setPassword] = useState('');
     const navigation = useNavigation();
-    const ingresar = <Icon name='arrow-right' size={20} color="white" />;
+    const ingresar = <Icon name='arrow-right' size={20} color="white"/>;
+    const {login} = useContext(AuthContext)
 
-    const handleSignIn = () => {
-        navigation.navigate("Navigation");
+    const handleSignIn = (values) => {
+        login(values)
     };
 
     const handleSignUp = () => {
@@ -23,44 +36,67 @@ const Login = () => {
 
     return (
         <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             behavior={Platform.OS === "ios" ? "padding" : "height"} // ajustar automáticamente para el teclado en iOS, desplazar en Android
         >
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.container}>
-                    <View>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Text style={styles.text}>BIENVENIDOS</Text>
-                        <Image source={{ uri: logo }} style={styles.logo} />
+                        <Image source={{uri: logo}} style={styles.logo}/>
                     </View>
-                    <View >
-                        <TextInput style={styles.user}
-                            placeholder="Usuario"
-                            value={user}
-                            onChangeText={(text) => setUser(text)} />
-                        <TextInput style={styles.password}
-                            textContentType="password"
-                            placeholder="Contraseña"
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                            secureTextEntry={true} />
-                        <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
-                            <Text style={styles.loginButtonText}>{ingresar} Ingresar</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <Formik initialValues={{email: '', password: ''}} onSubmit={(values, actions) => {
+                        actions.resetForm()
+                        handleSignIn(values)
+                    }} validationSchema={loginSchema}>
+
+                        {({
+                              handleChange, values,
+                              handleSubmit, handleBlur,
+                              errors, touched
+                          }) => (
+                            <View>
+
+                                <Input placeholder={'Email'}
+                                       leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+                                       value={values.email}
+                                       onChangeText={handleChange('email')}
+                                       onBlur={handleBlur('email')}
+                                       errorMessage={touched.email && errors.email}
+                                       autoCapitalize="none"
+                                />
+                                <Input placeholder={'Password'}
+                                       leftIcon={{ type: 'font-awesome', name: 'key' }}
+                                       value={values.password}
+                                       onChangeText={handleChange('password')}
+                                       onBlur={handleBlur('password')}
+                                       errorMessage={touched.password && errors.password}
+                                       secureTextEntry={true}
+                                       textContentType="password"
+                                       styles={{width: '100%'}}
+                                       autoCapitalize="none"
+                                />
+
+                                <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                                    <Text style={styles.loginButtonText}>{ingresar} Ingresar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </Formik>
                     <TouchableOpacity onPress={handleSignUp}>
                         <Text style={styles.signupLink}>Crear una cuenta</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </KeyboardAvoidingView>
-    );
+    )
+        ;
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#DEE1E6',
+        // backgroundColor: '#DEE1E6',
         marginTop: 35,
         marginLeft: 25,
         marginRight: 25,
@@ -70,7 +106,7 @@ const styles = StyleSheet.create({
     user: {
         color: "black",
         fontSize: 15,
-        marginTop: -90,
+        marginTop: -50,
         marginBottom: 10,
         padding: 10,
         borderWidth: 1,
@@ -123,7 +159,15 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         textAlign: 'center',
+    },
+    errorText: {
+        color: 'crimson',
+        fontWeight: 'bold',
+        marginBottom: 10,
+        marginTop: 6,
+        textAlign: 'center'
     }
+
 })
 
 export default Login;

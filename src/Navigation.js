@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from "react-native-vector-icons";;
+import { MaterialCommunityIcons } from "react-native-vector-icons";
 import Statistics from "./components/stat/Statistics";
 import Register from "./components/diag/Register";
 import Information from "./components/inf/Information"

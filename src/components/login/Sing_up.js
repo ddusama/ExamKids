@@ -1,90 +1,129 @@
-import React, { useState } from "react";
+import React, {useContext} from "react";
+import {Formik} from "formik";
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
-    Image, StyleSheet, View, Text, TextInput, TouchableOpacity, SafeAreaView, KeyboardAvoidingView,
+    Image, StyleSheet, View, Text,
+    TextInput, TouchableOpacity,
+    SafeAreaView, KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import * as yup from "yup";
+import {validateCedula} from "../../utils/validators";
+import {AuthContext} from "../../context/AuthContext";
+import {Input} from "@rneui/themed";
 
+const signUpSchema = yup.object({
+    email: yup.string()
+        .email('Invalid Email')
+        .required('Email is required'),
+    password: yup.string()
+        .min(8, 'Password is too short')
+        .required('Password is required'),
+    cedula: yup.string()
+        .required('Cedula is required')
+        .test("validate-cedula", "Verificar Cedula", c => validateCedula(c))
+        .length(10),
+    name: yup.string()
+        .required()
+})
 const Sing_up = () => {
     const logo = "https://i.postimg.cc/Zn9ScShf/logo.png";
-    const [user, setUser] = useState('');
-    const [password, setPassword] = useState('');
-    const [ced, setCed] = useState('');
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password1, setPassword1] = useState('');
-
     const navigation = useNavigation();
-    const registrar = <Icon name='check' size={20} color="white" />;
+    const registrar = <Icon name='check' size={20} color="white"/>;
+    const {signUp} = useContext(AuthContext)
 
-    const handleSignIn = () => {
-        navigation.navigate("Login");
+    const handleSignIn = (values) => {
+        signUp(values)
     };
-
 
 
     return (
         <KeyboardAvoidingView
-            style={{ flex: 1 }}
+            style={{flex: 1}}
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajustar automáticamente para el teclado en iOS, desplazar en Android
         >
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.container}>
-                    <View>
+                    <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Text style={styles.text}>REGISTRO</Text>
-                        <Image source={{ uri: logo }} style={styles.logo} />
+                        <Image source={{uri: logo}} style={styles.logo}/>
                     </View>
-                    <View >
-                        <TextInput style={styles.user}
-                            placeholder="Usuario"
-                            value={user}
-                            onChangeText={(text) => setUser(text)} />
+                    <View>
+                        <Formik initialValues={{cedula: '', name: '', email: '', password: ''}}
+                                onSubmit={(values, actions) => {
+                                    actions.resetForm()
+                                    handleSignIn(values)
+                                }}
+                                validationSchema={signUpSchema}>
+                            {({
+                                  handleChange, values,
+                                  handleSubmit, handleBlur,
+                                  errors, touched
+                              }) => (
+                                <View>
 
-                        <TextInput style={styles.password}
-                            placeholder="Cédula"
-                            value={ced}
-                            onChangeText={(text) => setCed(text)} />
 
-                        <TextInput style={styles.password}
-                            placeholder="Nombres y Apellidos"
-                            value={name}
-                            onChangeText={(text) => setName(text)} />
+                                    <Input placeholder={'Cedula'}
+                                           leftIcon={{type: 'font-awesome', name: 'address-card'}}
+                                           value={values.cedula}
+                                           onChangeText={handleChange('cedula')}
+                                           onBlur={handleBlur('cedula')}
+                                           errorMessage={touched.cedula && errors.cedula}
+                                           autoCapitalize="none"
+                                    />
+                                    <Input placeholder={'Nombres y Apellidos'}
+                                           leftIcon={{type: 'font-awesome', name: 'user'}}
+                                           value={values.name}
+                                           onChangeText={handleChange('name')}
+                                           onBlur={handleBlur('name')}
+                                           errorMessage={touched.name && errors.name}
+                                           autoCapitalize="none"
+                                    />
+                                    <Input placeholder={'Corrreo institucional'}
+                                           leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                                           value={values.email}
+                                           onChangeText={handleChange('email')}
+                                           onBlur={handleBlur('email')}
+                                           errorMessage={touched.email && errors.email}
+                                           autoCapitalize="none"
+                                    />
 
-                        <TextInput style={styles.password}
-                            placeholder="Corrreo institucional"
-                            value={email}
-                            onChangeText={(text) => setEmail(text)} />
+                                    <Input placeholder={'Password'}
+                                           leftIcon={{type: 'font-awesome', name: 'key'}}
+                                           value={values.password}
+                                           onChangeText={handleChange('password')}
+                                           onBlur={handleBlur('password')}
+                                           errorMessage={touched.password && errors.password}
+                                           secureTextEntry={true}
+                                           textContentType="password"
+                                           styles={{width: '100%'}}
+                                           autoCapitalize="none"
+                                    />
 
-                        <TextInput style={styles.password}
-                            textContentType="password"
-                            placeholder="Contraseña"
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                            secureTextEntry={true} />
-
-                        <TextInput style={styles.password}
-                            textContentType="password"
-                            placeholder="Validar contraseña"
-                            value={password1}
-                            onChangeText={(text) => setPassword1(text)}
-                            secureTextEntry={true} />
-
-                        <TouchableOpacity style={styles.loginButton} onPress={handleSignIn}>
-                            <Text style={styles.loginButtonText}>{registrar} Registrarse</Text>
+                                    <TouchableOpacity style={styles.loginButton} onPress={handleSubmit}>
+                                        <Text style={styles.loginButtonText}>{registrar} Registrarse</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                            }
+                        </Formik>
+                        <TouchableOpacity onPress={() => {
+                            navigation.goBack()
+                        }}>
+                            <Text style={styles.signupLink}>Regresar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </SafeAreaView>
         </KeyboardAvoidingView>
-    );
+    )
+        ;
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#DEE1E6',
         marginTop: 35,
         marginLeft: 25,
         marginRight: 25,
@@ -123,13 +162,20 @@ const styles = StyleSheet.create({
         width: 200,
         height: "50%",
         marginTop: 20,
-        marginBottom:-120
+        marginBottom: -120
     },
     safeArea: {
         flex: 1, // Cambia el flex a 1 para ocupar todo el espacio
         backgroundColor: 'white',
     },
-
+    signupLink: {
+        color: 'black',
+        textDecorationLine: 'underline',
+        textAlign: 'center',
+        fontSize: 19,
+        marginTop: 40,
+        marginBottom: 20,
+    },
     loginButton: {
         backgroundColor: "#fd7858",
         borderRadius: 5,
@@ -141,6 +187,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         textAlign: 'center',
+    },
+    errorText: {
+        color: 'crimson',
+        fontWeight: 'bold',
+        marginBottom: 10,
+        marginTop: 6,
+        textAlign: 'center'
     }
 })
 
