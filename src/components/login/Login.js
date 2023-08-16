@@ -35,10 +35,7 @@ const Login = () => {
     };
 
     return (
-        <KeyboardAvoidingView
-            style={{flex: 1}}
-            behavior={Platform.OS === "ios" ? "padding" : "height"} // ajustar automáticamente para el teclado en iOS, desplazar en Android
-        >
+        
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.container}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
@@ -55,7 +52,7 @@ const Login = () => {
                               handleSubmit, handleBlur,
                               errors, touched
                           }) => (
-                            <View>
+                            <View style={styles.container1}>
 
                                 <Input placeholder={'Email'}
                                        leftIcon={{ type: 'font-awesome', name: 'envelope' }}
@@ -88,14 +85,13 @@ const Login = () => {
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
-        </KeyboardAvoidingView>
+     
     )
         ;
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    container: {      
         // backgroundColor: '#DEE1E6',
         marginTop: 35,
         marginLeft: 25,
@@ -103,17 +99,13 @@ const styles = StyleSheet.create({
         marginBottom: 35,
         borderRadius: 10
     },
-    user: {
-        color: "black",
-        fontSize: 15,
-        marginTop: -50,
-        marginBottom: 10,
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 3,
-        borderColor: "#76768e",
-        backgroundColor: "white",
+
+    container1: {      
+       marginTop: -55,
+        
     },
+    
+    
     password: {
         color: "black",
         fontSize: 15,

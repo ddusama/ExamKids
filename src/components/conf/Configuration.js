@@ -18,6 +18,7 @@ const Configuration = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            
             <View>
                 <View style={styles.container}>
                     <View >
@@ -40,10 +41,10 @@ const Configuration = () => {
                             <Text style={styles.SubjectText}>{userInfo.sub}</Text>
                         </Pressable>
                         <TouchableOpacity style={styles.button} onPress={handleOut}>
-                            <Text style={styles.textButton}>
+                            <Text style={styles.textButton}
+                            >
                                 Cerrar sesión
-                            </Text>
-                            
+                            </Text>                            
                         </TouchableOpacity>
                         <Text></Text>
                     </View>

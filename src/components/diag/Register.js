@@ -35,6 +35,7 @@ const Register = () => {
         }
     }
 
+
     const handleSignIn = async (values) => {
         if (image === null) {
             return
@@ -390,22 +391,24 @@ const Register = () => {
                         if (loading) return
                         setVisible(!visible)
                     }}>
-                <Dialog.Title title={'Diagnostico'}/>
+                <Dialog.Title title={'DIAGNÓSTICO PREVIO'}
+                 />
                 {loading && <Dialog.Loading/>}
                 {diagnostic && (
                     <View>
-                        <Text>Cedula: {diagnostic.cedula}</Text>
+                        <Text>Cédula: {diagnostic.cedula}</Text>
                         <Text>Nombre: {diagnostic.nombre}</Text>
                         <Text>Edad: {diagnostic.edad}</Text>
-                        <Text>lesion: {diagnostic.lesion}</Text>
-                        <Text>enfermedad: {diagnostic.enfermedad}</Text>
-                        <Text>tratamiento: {diagnostic.tratamiento}</Text>
+                        <Text>Lesión: {diagnostic.lesion}</Text>
+                        <Text>Enfermedad: {diagnostic.enfermedad}</Text>
+                        <Text>Posible tratamiento: {diagnostic.tratamiento}</Text>
                     </View>
                 )}
             </Dialog>
         </SafeAreaView>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -416,6 +419,7 @@ const styles = StyleSheet.create({
         marginBottom: 35,
         borderRadius: 10
     },
+    
     title: {
         marginTop: 25,
         color: 'black',

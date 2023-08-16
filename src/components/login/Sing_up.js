@@ -39,17 +39,15 @@ const Sing_up = () => {
 
 
     return (
-        <KeyboardAvoidingView
-            style={{flex: 1}}
-            behavior={Platform.OS === "ios" ? "padding" : "height"} // Ajustar automáticamente para el teclado en iOS, desplazar en Android
-        >
+        
             <SafeAreaView style={styles.safeArea}>
+                
                 <View style={styles.container}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Text style={styles.text}>REGISTRO</Text>
                         <Image source={{uri: logo}} style={styles.logo}/>
                     </View>
-                    <View>
+                    <View style={styles.container1} >
                         <Formik initialValues={{cedula: '', name: '', email: '', password: ''}}
                                 onSubmit={(values, actions) => {
                                     actions.resetForm()
@@ -116,19 +114,21 @@ const Sing_up = () => {
                     </View>
                 </View>
             </SafeAreaView>
-        </KeyboardAvoidingView>
+       
     )
         ;
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         marginTop: 35,
         marginLeft: 25,
         marginRight: 25,
         marginBottom: 35,
         borderRadius: 10
+    },
+    container1: {
+        marginTop: -130,
     },
     user: {
         color: "black",
@@ -161,8 +161,7 @@ const styles = StyleSheet.create({
     logo: {
         width: 200,
         height: "50%",
-        marginTop: 20,
-        marginBottom: -120
+        
     },
     safeArea: {
         flex: 1, // Cambia el flex a 1 para ocupar todo el espacio
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         textAlign: 'center',
         fontSize: 19,
-        marginTop: 40,
+        marginTop: 20,
         marginBottom: 20,
     },
     loginButton: {
