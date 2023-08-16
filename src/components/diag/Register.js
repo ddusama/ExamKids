@@ -92,10 +92,8 @@ const Register = () => {
             .lessThan(120)
             .required(),
         temperatura: yup.number()
-            .required()
-            .test('decimal', 'Must be 2 decimal places',
-                value => (value + "").match(/^\d+(\.\d{2})?$/),
-            )
+            .required(),
+            
     })
     const registerInitialValues = {
         cedula: '',

@@ -1,16 +1,16 @@
-import React, {useContext} from 'react';
-import {Image, StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Pressable} from 'react-native';
+import React, { useContext } from 'react';
+import { Image, StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
-import {AuthContext} from "../../context/AuthContext";
+import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from "../../context/AuthContext";
 
 const Configuration = () => {
     const user =
         'https://i.postimg.cc/KYbfVx3p/png-transparent-computer-icons-user-encapsulated-postscript-others-miscellaneous-orange-user-profile.png';
-    const cerrarIcon = <Icon name='arrow-left' size={20} color="white"/>;
+    const cerrarIcon = <Icon name='arrow-left' size={20} color="white" />;
 
     const navigation = useNavigation();
-    const {logout, userInfo} = useContext(AuthContext)
+    const { logout, userInfo } = useContext(AuthContext)
 
     const handleOut = () => {
         logout()
@@ -19,12 +19,14 @@ const Configuration = () => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View>
-                <View>
-                    <View style={styles.container}>
+                <View style={styles.container}>
+                    <View >
                         <Text style={styles.text}>PERFIL</Text>
-                        <Image source={{uri: user}} style={styles.user}/>
                     </View>
-                    <View style={{flexDirection: "column", alignItems: "center"}}>
+                    <View style={styles.container1}>
+                        <Image source={{ uri: user }} style={styles.user} />
+                    </View>
+                    <View style={{ flexDirection: "column", alignItems: "center" }}>
                         <Pressable style={styles.RectangleShapeView}>
                             <Text style={styles.headtText}>Cédula</Text>
                             <Text style={styles.SubjectText}>{userInfo.cedula}</Text>
@@ -41,7 +43,9 @@ const Configuration = () => {
                             <Text style={styles.textButton}>
                                 Cerrar sesión
                             </Text>
+                            
                         </TouchableOpacity>
+                        <Text></Text>
                     </View>
                 </View>
             </View>
@@ -51,13 +55,16 @@ const Configuration = () => {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
         backgroundColor: '#DEE1E6',
         marginTop: 35,
         marginLeft: 25,
         marginRight: 25,
-        marginBottom: 35,
+        marginBottom:35,
         borderRadius: 10
+    },
+    container1: {
+        alignItems:'center'
+        
     },
     text: {
         marginTop: 25,
@@ -75,13 +82,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     user: {
-        marginTop: 30,
+        alignItems: 'center',
+        marginTop: 20,
         width: 180,
         height: 150, // Ajusta la altura deseada para la imagen
     },
     button: {
-        marginTop: 50,
-        borderWidth: 1,
+        marginTop: 20,
         borderColor: '=',
         backgroundColor: '#fd7858',
         padding: 10,
@@ -94,7 +101,6 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     safeArea: {
-        flex: 1,
         backgroundColor: 'white', // Cambia el color del fondo según el tema de tu app
     },
     RectangleShapeView: {
